@@ -199,7 +199,7 @@ void Search::Worker::start_searching() {
     {
         rootMoves.emplace_back(Move::none());
         main_manager()->updates.onUpdateNoMoves(
-          {0, {rootPos.checkers() ? VALUE_MATE : VALUE_DRAW, rootPos}});
+          {0, {rootPos.checkers() ? -VALUE_MATE : VALUE_DRAW, rootPos}});
     }
     else
     {
@@ -1408,7 +1408,7 @@ moves_loop:  // When in check, search starts here
         bestValue = (bestValue * depth + beta) / (depth + 1);
 
     if (!moveCount)
-        bestValue = excludedMove ? alpha : ss->inCheck ? mate_in(ss->ply) : VALUE_DRAW;
+        bestValue = excludedMove ? alpha : ss->inCheck ? mated_in(ss->ply) : VALUE_DRAW;
 
     // If there is a move that produces search value greater than alpha,
     // we update the stats of searched moves.
@@ -1700,7 +1700,7 @@ Value Search::Worker::qsearch(Position& pos, Stack* ss, Value alpha, Value beta)
     if (ss->inCheck && bestValue == -VALUE_INFINITE)
     {
         assert(!MoveList<LEGAL>(pos).size());
-        return mate_in(ss->ply);  // Plies to mate from the root
+        return mated_in(ss->ply);  // Plies to mate from the root
     }
 
     if (!is_decisive(bestValue) && bestValue > beta)
@@ -1752,7 +1752,7 @@ TimePoint Search::Worker::elapsed() const {
 TimePoint Search::Worker::elapsed_time() const { return main_manager()->tm.elapsed_time(); }
 
 Value Search::Worker::evaluate(const Position& pos) {
-    return -Eval::evaluate(networks[numaAccessToken], pos, accumulatorStack, refreshTable,
+    return Eval::evaluate(networks[numaAccessToken], pos, accumulatorStack, refreshTable,
                           optimism[pos.side_to_move()]);
 }
 
