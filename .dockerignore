@@ -1,0 +1,12 @@
+.git
+.devcontainer
+**/.DS_Store
+**/*.o
+**/*.d
+**/*.gcda
+**/*.gcno
+**/*.profdata
+**/*.profraw
+src/stockfish
+src/stockfish.exe
+src/*.nnue

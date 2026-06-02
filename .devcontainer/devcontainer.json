@@ -1,0 +1,41 @@
+{
+  "name": "Drownfish",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": "..",
+    "args": {
+      "USERNAME": "Drownfish"
+    }
+  },
+  "workspaceFolder": "/workspaces/Drownfish",
+  "remoteUser": "Drownfish",
+  "updateRemoteUserUID": true,
+  "runArgs": [
+    "--cap-add=SYS_PTRACE",
+    "--security-opt",
+    "seccomp=unconfined"
+  ],
+  "containerEnv": {
+    "COMP": "gcc",
+    "COMPCXX": "g++",
+    "MAKEFLAGS": "-j"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "llvm-vs-code-extensions.vscode-clangd",
+        "ms-vscode.cpptools",
+        "ms-vscode.makefile-tools"
+      ],
+      "settings": {
+        "clangd.arguments": [
+          "--background-index"
+        ],
+        "makefile.makeDirectory": "${workspaceFolder}/src",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "postCreateCommand": "git config --global --add safe.directory ${containerWorkspaceFolder} && make -C src help",
+  "postAttachCommand": "printf '\\nDrownfish container ready. Try: cd src && make -j profile-build && ./stockfish\\n'"
+}
