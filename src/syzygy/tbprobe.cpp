@@ -1721,6 +1721,21 @@ Config Tablebases::rank_root_moves(const OptionsMap&            options,
                                    const std::function<bool()>& time_abort) {
     Config config;
 
+    // Drownfish inverts Stockfish's score convention, but Syzygy WDL/DTZ tables encode
+    // normal-chess wins as positive. Until root and in-search TB scores are inverted
+    // deliberately, keeping probes disabled is the least surprising behavior.
+    bool disableTablebases = true;
+    if (disableTablebases)
+    {
+        (void) options;
+        (void) pos;
+        (void) rankDTZ;
+        (void) time_abort;
+        for (auto& m : rootMoves)
+            m.tbRank = 0;
+        return config;
+    }
+
     if (rootMoves.empty())
         return config;
 
