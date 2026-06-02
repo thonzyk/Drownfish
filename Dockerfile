@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM tensorflow/tensorflow:2.15.0-gpu
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG USERNAME=drownfish
